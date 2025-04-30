@@ -1,0 +1,6 @@
+version: "2"
+authtoken: 2rfrPzb9nQNQpzusqTzqhJh2QyM_4kuCwW69Fd5Vz8ffshFXp
+tunnels:
+  webapp:
+    proto: http
+    addr: telegram-webapp:8080

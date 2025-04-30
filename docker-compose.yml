@@ -1,0 +1,45 @@
+version: '3.8'
+
+services:
+  bot:
+    build: ./bot
+    container_name: telegram-bot
+    environment:
+      - BOT_TOKEN=7526898144:AAEimW92zjqbsZ1WJeUkfKUJVPrvONU42io
+      - NGROK_URL=http://ngrok:4040  # Adicionando a variável para pegar a URL do ngrok
+    restart: always
+    depends_on:
+      - ngrok  # Garantir que o ngrok esteja pronto antes de iniciar o bot
+    command: >
+      bash -c "python bot.py"  # Aqui você pode rodar o seu bot de acordo com a configuração do seu código
+
+  webapp:
+    build:
+      context: ./webapp
+      dockerfile: Dockerfile.webapp
+    container_name: telegram-webapp
+    ports:
+      - "8080:8080"
+    restart: always
+
+  ngrok:
+    image: wernight/ngrok
+    container_name: ngrok
+    environment:
+      - NGROK_AUTHTOKEN=2rfrPzb9nQNQpzusqTzqhJh2QyM_4kuCwW69Fd5Vz8ffshFXp
+      - NGROK_PORT=8080  # Expondo a porta 8080 do webapp através do ngrok
+    command: http webapp:8080  # Expondo a porta 8080 do webapp através do ngrok
+    restart: unless-stopped
+    ports:
+      - "4040:4040"  # Expondo a interface de controle do ngrok
+    depends_on:
+      - webapp  # Garantir que o webapp esteja rodando antes do ngrok
+
+  ia-backend:
+    build: ./ia-backend
+    container_name: ia-backend
+    ports:
+      - "8000:8000"
+    restart: always
+    depends_on:
+      - webapp  # Se tiver dependências com outro serviço

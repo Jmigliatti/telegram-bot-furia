@@ -1,0 +1,343 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FURIA News Chat</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #FFFFFF;
+            --secondary-color: #1A1A1A;
+            --accent-color: #333333;
+            --text-color: #FFFFFF;
+            --text-secondary: #CCCCCC;
+            --background-color: #000000;
+            --card-background: #1A1A1A;
+            --hover-color: #2A2A2A;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Helvetica', sans-serif;
+            background-color: var(--background-color);
+            color: var(--text-color);
+            line-height: 1.6;
+            min-height: 100vh;
+        }
+
+        .main-wrapper {
+            display: grid;
+            grid-template-columns: 300px 1fr;
+            gap: 20px;
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 20px;
+            min-height: 100vh;
+        }
+
+        .sidebar {
+            background: var(--card-background);
+            border-radius: 8px;
+            padding: 20px;
+            border: 1px solid var(--accent-color);
+            height: 100%;
+            width: fit-content;
+        }
+
+        .streamers-box h3 {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 1rem;
+            margin-bottom: 20px;
+            color: var(--primary-color);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            text-align: center;
+        }
+
+        .streamer {
+            display: flex;
+            align-items: center;
+            margin-bottom: 15px;
+            padding: 12px;
+            background: var(--accent-color);
+            border-radius: 12px;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            border: 1px solid var(--hover-color);
+        }
+
+        .streamer:hover {
+            background: var(--hover-color);
+            transform: translateX(5px);
+        }
+
+        .streamer i {
+            margin-right: 8px;
+            font-size: 1.2rem;
+        }
+
+        .streamer i.online {
+            color: #4CAF50;
+            animation: pulse 2s infinite;
+        }
+
+        .streamer i.offline {
+            color: #FF5252;
+        }
+
+        .main-content {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        header {
+            background: var(--card-background);
+            border-radius: 16px;
+            padding: 20px;
+            text-align: center;
+            border: 1px solid var(--accent-color);
+        }
+
+        header img {
+            max-width: 200px;
+            margin-bottom: 20px;
+            transition: transform 0.3s ease;
+        }
+
+        header img:hover {
+            transform: scale(1.05);
+        }
+
+        header h1 {
+            font-family: 'Helvetica', sans-serif;
+            font-size: 2.5rem;
+            color: var(--primary-color);
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        .chat-container {
+            background: var(--card-background);
+            border-radius: 16px;
+            padding: 20px;
+            border: 1px solid var(--accent-color);
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .chat-box {
+            flex: 1;
+            margin-bottom: 20px;
+            min-height: 400px;
+            overflow-y: auto;
+        }
+
+        #chat-form {
+            display: flex;
+            gap: 10px;
+            margin-top: auto;
+        }
+
+        #user-input {
+            flex: 1;
+            padding: 15px;
+            border: 1px solid var(--accent-color);
+            border-radius: 8px;
+            background: var(--card-background);
+            color: var(--text-color);
+            font-family: 'Poppins', sans-serif;
+            transition: all 0.3s ease;
+        }
+
+        #user-input:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.1);
+        }
+
+        button[type="submit"] {
+            padding: 15px 30px;
+            background-color: var(--primary-color);
+            color: var(--background-color);
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        button[type="submit"]:hover {
+            background-color: var(--text-secondary);
+            transform: translateY(-2px);
+        }
+
+        .news-button-container {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 1000;
+        }
+
+        .news-button {
+            padding: 12px 24px;
+            background-color: var(--primary-color);
+            color: var(--background-color);
+            text-decoration: none;
+            border-radius: 8px;
+            font-weight: 600;
+            font-family: 'Montserrat', sans-serif;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+            display: inline-block;
+        }
+
+        .news-button:hover {
+            background-color: var(--text-secondary);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 8px rgba(0, 0, 0, 0.3);
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+            100% { transform: scale(1); }
+        }
+
+        @media (max-width: 1024px) {
+            .main-wrapper {
+                grid-template-columns: 250px 1fr;
+                padding: 15px;
+            }
+
+            header h1 {
+                font-size: 2.2rem;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .main-wrapper {
+                grid-template-columns: 1fr;
+            }
+
+            .sidebar {
+                order: 2;
+            }
+
+            .news-button-container {
+                top: 10px;
+                right: 10px;
+            }
+
+            .news-button {
+                padding: 10px 20px;
+                font-size: 0.9rem;
+            }
+
+            header h1 {
+                font-size: 1.8rem;
+            }
+
+            .streamers-box h3 {
+                font-size: 1.3rem;
+            }
+
+            .streamer {
+                padding: 10px;
+            }
+
+            .chat-box {
+                min-height: 300px;
+            }
+
+            #user-input, button[type="submit"] {
+                padding: 12px 20px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .main-wrapper {
+                padding: 10px;
+            }
+
+            header h1 {
+                font-size: 1.5rem;
+            }
+
+            header img {
+                max-width: 150px;
+            }
+
+            .streamers-box h3 {
+                font-size: 1.2rem;
+            }
+
+            .streamer {
+                padding: 8px;
+                font-size: 0.9rem;
+            }
+
+            .chat-box {
+                min-height: 250px;
+            }
+
+            #user-input, button[type="submit"] {
+                padding: 10px 15px;
+                font-size: 0.9rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="news-button-container">
+        <a href="noticias.html" class="news-button">Notícias</a>
+    </div>
+
+    <div class="main-wrapper">
+        <aside class="sidebar">
+            <div class="streamers-box">
+                <h3>Streamers FURIA</h3>
+                <div class="streamer">
+                    <i class="fas fa-circle online"></i>
+                    <span>Streamer 1</span>
+                </div>
+                <div class="streamer">
+                    <i class="fas fa-circle offline"></i>
+                    <span>Streamer 2</span>
+                </div>
+                <div class="streamer">
+                    <i class="fas fa-circle online"></i>
+                    <span>Streamer 3</span>
+                </div>
+            </div>
+        </aside>
+
+        <main class="main-content">
+            <header>
+                <img src="/static/Furia_Esports_logo.png" alt="Furia Logo" class="logo">
+                <h1>FURIA Chat</h1>
+            </header>
+
+            <div class="chat-container">
+                <div id="chat-box" class="chat-box"></div>
+                <form id="chat-form">
+                    <input type="text" id="user-input" placeholder="Digite sua pergunta..." autocomplete="off" required>
+                    <button type="submit">Enviar</button>
+                </form>
+            </div>
+        </main>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
