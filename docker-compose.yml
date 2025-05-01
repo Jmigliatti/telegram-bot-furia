@@ -20,7 +20,15 @@ services:
     container_name: telegram-webapp
     ports:
       - "8080:8080"
+    environment:
+      - MYSQL_HOST=mysql
+      - MYSQL_USER=root
+      - MYSQL_PASSWORD=123456
+      - MYSQL_DATABASE=furia_chat
     restart: always
+    depends_on:
+      mysql:
+        condition: service_healthy
 
   ngrok:
     image: wernight/ngrok
@@ -35,6 +43,23 @@ services:
     depends_on:
       - webapp  # Garantir que o webapp esteja rodando antes do ngrok
 
+  mysql:
+    image: mysql:8.0
+    container_name: mysql
+    environment:
+      - MYSQL_ROOT_PASSWORD=123456
+      - MYSQL_DATABASE=furia_chat
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+    restart: always
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-p123456"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
   ia-backend:
     build: ./ia-backend
     container_name: ia-backend
@@ -43,3 +68,6 @@ services:
     restart: always
     depends_on:
       - webapp  # Se tiver dependências com outro serviço
+
+volumes:
+  mysql_data:

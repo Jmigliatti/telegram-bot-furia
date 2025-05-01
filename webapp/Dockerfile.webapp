@@ -1,10 +1,23 @@
-FROM python:3.11-slim
+FROM python:3.9-slim
 
 WORKDIR /app
 
+# Instalar wait-for-it
+RUN apt-get update && apt-get install -y wget && \
+    wget -O /wait-for-it.sh https://raw.githubusercontent.com/vishnubob/wait-for-it/master/wait-for-it.sh && \
+    chmod +x /wait-for-it.sh && \
+    apt-get remove -y wget && \
+    apt-get clean && \
+    rm -rf /var/lib/apt/lists/*
+
 COPY requirements.txt .
-RUN pip install --no-cache-dir -r requirements.txt
+RUN pip install -r requirements.txt
 
 COPY . .
 
-CMD ["python", "serve_webapp.py"]
+# Criar diretório para o banco de dados
+RUN mkdir -p /app/db
+
+CMD ["/wait-for-it.sh", "mysql:3306", "--", "python", "serve_webapp.py"]
+
+EXPOSE 8080

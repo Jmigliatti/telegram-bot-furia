@@ -41,6 +41,7 @@
             background-position: center;
             background-repeat: no-repeat;
             position: relative;
+            padding: 20px;
         }
 
         body::before {
@@ -57,28 +58,29 @@
         .login-container {
             background: var(--card-background);
             border-radius: 16px;
-            padding: 40px;
+            padding: 30px;
             width: 100%;
             max-width: 400px;
             box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
             position: relative;
             z-index: 2;
             border: 1px solid var(--accent-color);
+            margin: 20px;
         }
 
         .logo-container {
             text-align: center;
-            margin-bottom: 30px;
+            margin-bottom: 25px;
         }
 
         .logo-container img {
-            max-width: 150px;
-            margin-bottom: 20px;
+            max-width: 120px;
+            margin-bottom: 15px;
         }
 
         .logo-container h1 {
             font-family: 'Montserrat', sans-serif;
-            font-size: 2rem;
+            font-size: 1.8rem;
             color: var(--primary-color);
             text-transform: uppercase;
             letter-spacing: 2px;
@@ -98,11 +100,11 @@
         .form-group input {
             width: 100%;
             padding: 12px 15px;
+            background: var(--secondary-color);
             border: 1px solid var(--accent-color);
             border-radius: 8px;
-            background: var(--background-color);
             color: var(--text-color);
-            font-family: 'Poppins', sans-serif;
+            font-size: 1rem;
             transition: all 0.3s ease;
         }
 
@@ -112,112 +114,66 @@
             box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.1);
         }
 
-        .login-button {
+        .form-group input::placeholder {
+            color: var(--text-secondary);
+        }
+
+        .btn {
             width: 100%;
-            padding: 15px;
-            background-color: var(--primary-color);
-            color: var(--background-color);
+            padding: 12px;
+            background: var(--primary-color);
+            color: var(--secondary-color);
             border: none;
             border-radius: 8px;
-            cursor: pointer;
-            font-family: 'Montserrat', sans-serif;
-            font-weight: 600;
             font-size: 1rem;
-            transition: all 0.3s ease;
-            margin-top: 10px;
-        }
-
-        .login-button:hover {
-            background-color: var(--text-secondary);
-            transform: translateY(-2px);
-        }
-
-        .social-login {
-            margin-top: 30px;
-            text-align: center;
-        }
-
-        .social-login p {
-            color: var(--text-secondary);
-            margin-bottom: 15px;
-            position: relative;
-        }
-
-        .social-login p::before,
-        .social-login p::after {
-            content: '';
-            position: absolute;
-            top: 50%;
-            width: 30%;
-            height: 1px;
-            background: var(--accent-color);
-        }
-
-        .social-login p::before {
-            left: 0;
-        }
-
-        .social-login p::after {
-            right: 0;
-        }
-
-        .social-buttons {
-            display: flex;
-            gap: 15px;
-            justify-content: center;
-        }
-
-        .social-button {
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            background: var(--background-color);
-            border: 1px solid var(--accent-color);
-            color: var(--text-color);
-            display: flex;
-            align-items: center;
-            justify-content: center;
+            font-weight: 600;
             cursor: pointer;
             transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 1px;
         }
 
-        .social-button:hover {
+        .btn:hover {
             background: var(--hover-color);
-            transform: translateY(-2px);
+            color: var(--primary-color);
         }
 
         .register-link {
             text-align: center;
             margin-top: 20px;
             color: var(--text-secondary);
+            font-size: 0.9rem;
         }
 
         .register-link a {
             color: var(--primary-color);
             text-decoration: none;
-            font-weight: 500;
+            transition: color 0.3s ease;
         }
 
         .register-link a:hover {
-            text-decoration: underline;
+            color: var(--text-secondary);
+        }
+
+        .error-message {
+            color: var(--error-color);
+            font-size: 0.9rem;
+            margin-top: 5px;
+            display: none;
         }
 
         @media (max-width: 480px) {
             .login-container {
-                padding: 30px 20px;
-                margin: 20px;
+                padding: 20px;
+                margin: 10px;
             }
 
             .logo-container h1 {
                 font-size: 1.5rem;
             }
 
-            .form-group input {
-                padding: 10px 12px;
-            }
-
-            .login-button {
-                padding: 12px;
+            .logo-container img {
+                max-width: 100px;
             }
         }
     </style>
@@ -225,74 +181,61 @@
 <body>
     <div class="login-container">
         <div class="logo-container">
-            <img src="/static/Furia_Esports_logo.png" alt="Furia Logo">
-            <h1>FURIA Chat</h1>
+            <img src="/static/Furia_Esports_logo.png" alt="FURIA Logo">
+            <h1>Login</h1>
         </div>
-
-        <form id="login-form">
+        <form id="loginForm">
             <div class="form-group">
                 <label for="email">E-mail</label>
-                <input type="email" id="email" name="email" placeholder="Digite seu e-mail" required>
+                <input type="email" id="email" name="email" required placeholder="Digite seu e-mail">
+                <div class="error-message" id="emailError"></div>
             </div>
-
             <div class="form-group">
                 <label for="password">Senha</label>
-                <input type="password" id="password" name="password" placeholder="Digite sua senha" required>
+                <input type="password" id="password" name="password" required placeholder="Digite sua senha">
+                <div class="error-message" id="passwordError"></div>
             </div>
-
-            <button type="submit" class="login-button">Entrar</button>
+            <button type="submit" class="btn">Entrar</button>
         </form>
-
-        <div class="social-login">
-            <p>ou entre com</p>
-            <div class="social-buttons">
-                <button class="social-button">
-                    <i class="fab fa-google"></i>
-                </button>
-                <button class="social-button">
-                    <i class="fab fa-facebook-f"></i>
-                </button>
-                <button class="social-button">
-                    <i class="fab fa-twitter"></i>
-                </button>
-            </div>
-        </div>
-
         <div class="register-link">
-            Não tem uma conta? <a href="register.html">Cadastre-se</a>
+            Não tem uma conta? <a href="/register">Cadastre-se</a>
         </div>
     </div>
 
     <script>
-        document.getElementById('login-form').addEventListener('submit', function(e) {
+        document.getElementById('loginForm').addEventListener('submit', async (e) => {
             e.preventDefault();
             
             const email = document.getElementById('email').value;
             const password = document.getElementById('password').value;
             
-            // Enviar dados para o servidor
-            fetch('/api/login', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({
-                    email: email,
-                    password: password
-                })
-            })
-            .then(response => response.json())
-            .then(data => {
-                if (data.error) {
-                    alert(data.error);
+            // Reset error messages
+            document.querySelectorAll('.error-message').forEach(el => el.style.display = 'none');
+            
+            try {
+                const response = await fetch('/api/login', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ email, password })
+                });
+                
+                const data = await response.json();
+                
+                if (response.ok) {
+                    window.location.href = '/chat';
                 } else {
-                    window.location.href = 'chat.html';
+                    // Show error message
+                    const errorField = document.getElementById(data.field + 'Error');
+                    if (errorField) {
+                        errorField.textContent = data.message;
+                        errorField.style.display = 'block';
+                    }
                 }
-            })
-            .catch(error => {
-                console.error('Erro:', error);
-                alert('Erro ao fazer login. Tente novamente.');
-            });
+            } catch (error) {
+                console.error('Error:', error);
+            }
         });
     </script>
 </body>

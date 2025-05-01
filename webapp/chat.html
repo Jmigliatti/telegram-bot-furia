@@ -1,0 +1,376 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FURIA Chat</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #FFFFFF;
+            --secondary-color: #1A1A1A;
+            --accent-color: #333333;
+            --text-color: #FFFFFF;
+            --text-secondary: #CCCCCC;
+            --background-color: #000000;
+            --card-background: #1A1A1A;
+            --hover-color: #2A2A2A;
+            --success-color: #4CAF50;
+            --error-color: #FF5252;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: var(--background-color);
+            color: var(--text-color);
+            line-height: 1.6;
+            min-height: 100vh;
+            display: flex;
+            background-image: url('/static/Furia_Esports_logo.png');
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            position: relative;
+            margin: 0 !important;
+        }
+
+        body::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.8);
+            z-index: 1;
+        }
+
+        .chat-container {
+            display: flex;
+            width: 100%;
+            max-width: 1200px;
+            margin: 20px auto;
+            background: var(--card-background);
+            border-radius: 16px;
+            overflow: hidden;
+            position: relative;
+            z-index: 2;
+            border: 1px solid var(--accent-color);
+        }
+
+        .sidebar {
+            width: 300px;
+            background: var(--secondary-color);
+            padding: 20px;
+            border-right: 1px solid var(--accent-color);
+        }
+
+        .chat-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .chat-header img {
+            width: 40px;
+            height: 40px;
+            margin-right: 10px;
+        }
+
+        .chat-header h1 {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 1.5rem;
+            color: var(--primary-color);
+        }
+
+        .online-users {
+            margin-bottom: 20px;
+        }
+
+        .online-users h2 {
+            font-size: 1rem;
+            color: var(--text-secondary);
+            margin-bottom: 10px;
+        }
+
+        .user-list {
+            list-style: none;
+        }
+
+        .user-item {
+            display: flex;
+            align-items: center;
+            padding: 8px;
+            border-radius: 8px;
+            margin-bottom: 5px;
+            transition: background-color 0.3s;
+        }
+
+        .user-item:hover {
+            background-color: var(--hover-color);
+        }
+
+        .user-status {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background-color: var(--success-color);
+            margin-right: 10px;
+        }
+
+        .chat-main {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .chat-messages {
+            flex: 1;
+            padding: 20px;
+            overflow-y: auto;
+        }
+
+        .message {
+            margin-bottom: 15px;
+            max-width: 70%;
+        }
+
+        .message.sent {
+            margin-left: auto;
+        }
+
+        .message.received {
+            margin-right: auto;
+        }
+
+        .message-content {
+            padding: 10px 15px;
+            border-radius: 12px;
+            background-color: var(--accent-color);
+        }
+
+        .message.sent .message-content {
+            background-color: var(--primary-color);
+            color: var(--background-color);
+        }
+
+        .message-info {
+            display: flex;
+            align-items: center;
+            margin-bottom: 5px;
+        }
+
+        .message-username {
+            font-weight: 500;
+            margin-right: 10px;
+        }
+
+        .message-time {
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+        }
+
+        .chat-input {
+            padding: 20px;
+            background: var(--secondary-color);
+            border-top: 1px solid var(--accent-color);
+        }
+
+        .message-form {
+            display: flex;
+            gap: 10px;
+        }
+
+        .message-input {
+            flex: 1;
+            padding: 12px 15px;
+            border: 1px solid var(--accent-color);
+            border-radius: 8px;
+            background: var(--background-color);
+            color: var(--text-color);
+            font-family: 'Poppins', sans-serif;
+        }
+
+        .send-button {
+            padding: 12px 20px;
+            background-color: var(--primary-color);
+            color: var(--background-color);
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+
+        .send-button:hover {
+            background-color: var(--text-secondary);
+            transform: translateY(-2px);
+        }
+
+        .logout-button {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            padding: 8px 15px;
+            background-color: var(--error-color);
+            color: var(--primary-color);
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+
+        .logout-button:hover {
+            background-color: #ff3333;
+            transform: translateY(-2px);
+        }
+
+        @media (max-width: 768px) {
+            .chat-container {
+                flex-direction: column;
+                margin: 0;
+                border-radius: 0;
+            }
+
+            .sidebar {
+                width: 100%;
+                border-right: none;
+                border-bottom: 1px solid var(--accent-color);
+            }
+
+            .message {
+                max-width: 85%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="chat-container">
+        <button class="logout-button" onclick="window.location.href='index.html'">
+            <i class="fas fa-sign-out-alt"></i> Sair
+        </button>
+
+        <div class="sidebar">
+            <div class="chat-header">
+                <img src="/static/Furia_Esports_logo.png" alt="Furia Logo">
+                <h1>FURIA Chat</h1>
+            </div>
+
+            <div class="online-users">
+                <h2>Usuários Online</h2>
+                <ul class="user-list" id="online-users">
+                    <!-- Usuários online serão adicionados aqui via JavaScript -->
+                </ul>
+            </div>
+        </div>
+
+        <div class="chat-main">
+            <div class="chat-messages" id="chat-messages">
+                <!-- Mensagens serão adicionadas aqui via JavaScript -->
+            </div>
+
+            <div class="chat-input">
+                <form id="message-form" class="message-form">
+                    <input type="text" id="message-input" class="message-input" placeholder="Digite sua mensagem..." required>
+                    <button type="submit" class="send-button">
+                        <i class="fas fa-paper-plane"></i> Enviar
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.0.1/socket.io.js"></script>
+    <script>
+        const socket = io();
+        const username = sessionStorage.getItem('username') || 'Usuário';
+        
+        // Conectar ao chat
+        socket.emit('login', { username: username });
+
+        // Atualizar lista de usuários online
+        socket.on('online_users', function(users) {
+            const userList = document.getElementById('online-users');
+            userList.innerHTML = '';
+            
+            users.forEach(user => {
+                const li = document.createElement('li');
+                li.className = 'user-item';
+                li.innerHTML = `
+                    <span class="user-status"></span>
+                    <span class="user-name">${user.username}</span>
+                `;
+                userList.appendChild(li);
+            });
+        });
+
+        // Receber mensagens
+        socket.on('new_message', function(data) {
+            const messagesDiv = document.getElementById('chat-messages');
+            const messageDiv = document.createElement('div');
+            messageDiv.className = `message ${data.user_id === socket.id ? 'sent' : 'received'}`;
+            
+            messageDiv.innerHTML = `
+                <div class="message-info">
+                    <span class="message-username">${data.username}</span>
+                    <span class="message-time">${data.timestamp}</span>
+                </div>
+                <div class="message-content">${data.message}</div>
+            `;
+            
+            messagesDiv.appendChild(messageDiv);
+            messagesDiv.scrollTop = messagesDiv.scrollHeight;
+        });
+
+        // Enviar mensagem
+        document.getElementById('message-form').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const messageInput = document.getElementById('message-input');
+            const message = messageInput.value.trim();
+            
+            if (message) {
+                socket.emit('send_message', {
+                    message: message,
+                    username: username
+                });
+                
+                messageInput.value = '';
+            }
+        });
+
+        // Carregar histórico de mensagens
+        socket.on('chat_history', function(messages) {
+            const messagesDiv = document.getElementById('chat-messages');
+            messagesDiv.innerHTML = '';
+            
+            messages.forEach(data => {
+                const messageDiv = document.createElement('div');
+                messageDiv.className = `message ${data.user_id === socket.id ? 'sent' : 'received'}`;
+                
+                messageDiv.innerHTML = `
+                    <div class="message-info">
+                        <span class="message-username">${data.username}</span>
+                        <span class="message-time">${data.timestamp}</span>
+                    </div>
+                    <div class="message-content">${data.message}</div>
+                `;
+                
+                messagesDiv.appendChild(messageDiv);
+            });
+            
+            messagesDiv.scrollTop = messagesDiv.scrollHeight;
+        });
+    </script>
+</body>
+</html> 

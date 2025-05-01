@@ -1,0 +1,486 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FURIA Chat - Torcida</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #FFFFFF;
+            --secondary-color: #1A1A1A;
+            --accent-color: #333333;
+            --text-color: #FFFFFF;
+            --text-secondary: #CCCCCC;
+            --background-color: #000000;
+            --card-background: #1A1A1A;
+            --hover-color: #2A2A2A;
+            --success-color: #4CAF50;
+            --error-color: #FF5252;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: var(--background-color);
+            color: var(--text-color);
+            line-height: 1.6;
+            min-height: 100vh;
+        }
+
+        .main-wrapper {
+            display: grid;
+            grid-template-columns: 300px 1fr;
+            gap: 20px;
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 20px;
+            min-height: 100vh;
+        }
+
+        .sidebar {
+            background: var(--card-background);
+            border-radius: 8px;
+            padding: 20px;
+            border: 1px solid var(--accent-color);
+            height: 100%;
+            width: fit-content;
+        }
+
+        .user-info {
+            display: flex;
+            align-items: center;
+            margin-bottom: 30px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid var(--accent-color);
+        }
+
+        .user-avatar {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: var(--accent-color);
+            margin-right: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+        }
+
+        .user-details h3 {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 1.1rem;
+            margin-bottom: 5px;
+        }
+
+        .user-details p {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+        }
+
+        .online-users h3 {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 1rem;
+            margin-bottom: 20px;
+            color: var(--primary-color);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .user {
+            display: flex;
+            align-items: center;
+            margin-bottom: 15px;
+            padding: 12px;
+            background: var(--accent-color);
+            border-radius: 12px;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            border: 1px solid var(--hover-color);
+        }
+
+        .user:hover {
+            background: var(--hover-color);
+            transform: translateX(5px);
+        }
+
+        .user i {
+            margin-right: 8px;
+            font-size: 1.2rem;
+        }
+
+        .user i.online {
+            color: var(--success-color);
+            animation: pulse 2s infinite;
+        }
+
+        .user i.offline {
+            color: var(--error-color);
+        }
+
+        .main-content {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .chat-header {
+            background: var(--card-background);
+            border-radius: 16px;
+            padding: 20px;
+            text-align: center;
+            border: 1px solid var(--accent-color);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .chat-header h1 {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 1.5rem;
+            color: var(--primary-color);
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        .logout-button {
+            padding: 8px 16px;
+            background-color: var(--error-color);
+            color: var(--primary-color);
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .logout-button:hover {
+            background-color: #ff3333;
+            transform: translateY(-2px);
+        }
+
+        .chat-container {
+            background: var(--card-background);
+            border-radius: 16px;
+            padding: 20px;
+            border: 1px solid var(--accent-color);
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .chat-box {
+            flex: 1;
+            margin-bottom: 20px;
+            min-height: 400px;
+            overflow-y: auto;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .message {
+            max-width: 70%;
+            padding: 12px 16px;
+            border-radius: 12px;
+            margin-bottom: 10px;
+            position: relative;
+        }
+
+        .message.sent {
+            align-self: flex-end;
+            background: var(--primary-color);
+            color: var(--background-color);
+            border-bottom-right-radius: 0;
+        }
+
+        .message.received {
+            align-self: flex-start;
+            background: var(--accent-color);
+            color: var(--text-color);
+            border-bottom-left-radius: 0;
+        }
+
+        .message .sender {
+            font-weight: 600;
+            margin-bottom: 5px;
+            font-size: 0.9rem;
+        }
+
+        .message .time {
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+            margin-top: 5px;
+            text-align: right;
+        }
+
+        #chat-form {
+            display: flex;
+            gap: 10px;
+            margin-top: auto;
+        }
+
+        #message-input {
+            flex: 1;
+            padding: 15px;
+            border: 1px solid var(--accent-color);
+            border-radius: 8px;
+            background: var(--background-color);
+            color: var(--text-color);
+            font-family: 'Poppins', sans-serif;
+            transition: all 0.3s ease;
+        }
+
+        #message-input:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.1);
+        }
+
+        button[type="submit"] {
+            padding: 15px 30px;
+            background-color: var(--primary-color);
+            color: var(--background-color);
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        button[type="submit"]:hover {
+            background-color: var(--text-secondary);
+            transform: translateY(-2px);
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+            100% { transform: scale(1); }
+        }
+
+        @media (max-width: 1024px) {
+            .main-wrapper {
+                grid-template-columns: 250px 1fr;
+                padding: 15px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .main-wrapper {
+                grid-template-columns: 1fr;
+            }
+
+            .sidebar {
+                order: 2;
+            }
+
+            .chat-header h1 {
+                font-size: 1.3rem;
+            }
+
+            .user {
+                padding: 10px;
+            }
+
+            .chat-box {
+                min-height: 300px;
+            }
+
+            #message-input, button[type="submit"] {
+                padding: 12px 20px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .main-wrapper {
+                padding: 10px;
+            }
+
+            .chat-header h1 {
+                font-size: 1.1rem;
+            }
+
+            .user {
+                padding: 8px;
+                font-size: 0.9rem;
+            }
+
+            .chat-box {
+                min-height: 250px;
+            }
+
+            #message-input, button[type="submit"] {
+                padding: 10px 15px;
+                font-size: 0.9rem;
+            }
+
+            .message {
+                max-width: 85%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="main-wrapper">
+        <aside class="sidebar">
+            <div class="user-info">
+                <div class="user-avatar">
+                    <i class="fas fa-user"></i>
+                </div>
+                <div class="user-details">
+                    <h3>Usuário</h3>
+                    <p>Online</p>
+                </div>
+            </div>
+
+            <div class="online-users">
+                <h3>Torcedores Online</h3>
+                <div class="user">
+                    <i class="fas fa-circle online"></i>
+                    <span>Torcedor 1</span>
+                </div>
+                <div class="user">
+                    <i class="fas fa-circle online"></i>
+                    <span>Torcedor 2</span>
+                </div>
+                <div class="user">
+                    <i class="fas fa-circle offline"></i>
+                    <span>Torcedor 3</span>
+                </div>
+            </div>
+        </aside>
+
+        <main class="main-content">
+            <div class="chat-header">
+                <h1>FURIA Chat</h1>
+                <button class="logout-button" onclick="window.location.href='index.html'">
+                    <i class="fas fa-sign-out-alt"></i> Sair
+                </button>
+            </div>
+
+            <div class="chat-container">
+                <div id="chat-box" class="chat-box">
+                    <div class="message received">
+                        <div class="sender">Torcedor 1</div>
+                        <div class="content">Vamos FURIA! Hoje é nosso dia!</div>
+                        <div class="time">10:30</div>
+                    </div>
+                    <div class="message sent">
+                        <div class="sender">Você</div>
+                        <div class="content">Vamos! A FURIA vai arrasar!</div>
+                        <div class="time">10:31</div>
+                    </div>
+                </div>
+
+                <form id="chat-form">
+                    <input type="text" id="message-input" placeholder="Digite sua mensagem..." autocomplete="off" required>
+                    <button type="submit">Enviar</button>
+                </form>
+            </div>
+        </main>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.0.1/socket.io.js"></script>
+    <script>
+        const socket = io();
+        let currentUser = null;
+
+        // Função para atualizar a lista de usuários online
+        function updateOnlineUsers(users) {
+            const onlineUsersContainer = document.querySelector('.online-users');
+            const usersList = onlineUsersContainer.querySelectorAll('.user');
+            usersList.forEach(user => user.remove());
+
+            users.forEach(user => {
+                const userElement = document.createElement('div');
+                userElement.className = 'user';
+                userElement.innerHTML = `
+                    <i class="fas fa-circle ${user.status === 'online' ? 'online' : 'offline'}"></i>
+                    <span>${user.username}</span>
+                `;
+                onlineUsersContainer.appendChild(userElement);
+            });
+        }
+
+        // Função para adicionar uma nova mensagem ao chat
+        function addMessage(messageData) {
+            const chatBox = document.getElementById('chat-box');
+            const isCurrentUser = messageData.user_id === currentUser;
+            
+            const messageElement = document.createElement('div');
+            messageElement.className = `message ${isCurrentUser ? 'sent' : 'received'}`;
+            messageElement.innerHTML = `
+                <div class="sender">${isCurrentUser ? 'Você' : messageData.username}</div>
+                <div class="content">${messageData.message}</div>
+                <div class="time">${messageData.timestamp}</div>
+            `;
+            
+            chatBox.appendChild(messageElement);
+            chatBox.scrollTop = chatBox.scrollHeight;
+        }
+
+        // Eventos do Socket.IO
+        socket.on('connect', () => {
+            console.log('Conectado ao servidor');
+            // Solicitar login após conexão
+            const username = prompt('Digite seu nome de usuário:');
+            if (username) {
+                currentUser = socket.id;
+                socket.emit('login', { username });
+            }
+        });
+
+        socket.on('user_joined', (data) => {
+            console.log(`${data.username} entrou no chat`);
+        });
+
+        socket.on('user_left', (data) => {
+            console.log(`Usuário ${data.user_id} saiu do chat`);
+        });
+
+        socket.on('online_users', (users) => {
+            updateOnlineUsers(users);
+        });
+
+        socket.on('chat_history', (messages) => {
+            const chatBox = document.getElementById('chat-box');
+            chatBox.innerHTML = '';
+            messages.forEach(addMessage);
+        });
+
+        socket.on('new_message', (messageData) => {
+            addMessage(messageData);
+        });
+
+        // Manipulador do formulário de chat
+        document.getElementById('chat-form').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const messageInput = document.getElementById('message-input');
+            const message = messageInput.value.trim();
+            
+            if (message) {
+                socket.emit('send_message', { message });
+                messageInput.value = '';
+            }
+        });
+
+        // Atualizar informações do usuário atual
+        socket.on('login_success', (data) => {
+            const userInfo = document.querySelector('.user-details');
+            userInfo.querySelector('h3').textContent = data.username;
+            userInfo.querySelector('p').textContent = 'Online';
+        });
+    </script>
+</body>
+</html> 
