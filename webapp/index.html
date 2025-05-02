@@ -246,13 +246,13 @@
         <div class="social-login">
             <p>ou entre com</p>
             <div class="social-buttons">
-                <button class="social-button">
+                <button class="social-button google" onclick="loginWithGoogle()">
                     <i class="fab fa-google"></i>
                 </button>
-                <button class="social-button">
+                <button class="social-button facebook" onclick="loginWithFacebook()">
                     <i class="fab fa-facebook-f"></i>
                 </button>
-                <button class="social-button">
+                <button class="social-button twitter" onclick="loginWithTwitter()">
                     <i class="fab fa-twitter"></i>
                 </button>
             </div>
@@ -263,6 +263,7 @@
         </div>
     </div>
 
+    <script src="auth.js"></script>
     <script>
         document.getElementById('login-form').addEventListener('submit', function(e) {
             e.preventDefault();
