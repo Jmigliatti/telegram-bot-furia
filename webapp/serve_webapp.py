@@ -4,8 +4,7 @@ import os
 from datetime import datetime
 import mysql.connector
 from mysql.connector import Error
-from cryptography.fernet import Fernet
-import base64
+import bcrypt
 from dotenv import load_dotenv
 import logging
 import time
@@ -34,10 +33,6 @@ MYSQL_CONFIG = {
     'retries': 3,
     'delay': 5
 }
-
-# Gerar uma chave Fernet válida
-KEY = Fernet.generate_key()
-cipher_suite = Fernet(KEY)
 
 def get_db_connection():
     retries = MYSQL_CONFIG.pop('retries', 3)
@@ -104,14 +99,17 @@ def init_db():
         logger.error(f"Erro ao inicializar banco de dados: {e}")
 
 def encrypt_password(password):
-    return cipher_suite.encrypt(password.encode()).decode()
+    salt = bcrypt.gensalt()
+    return bcrypt.hashpw(password.encode(), salt).decode()
 
-def verify_password(encrypted_password, password):
+def verify_password(hashed_password, password):
     try:
-        decrypted = cipher_suite.decrypt(encrypted_password.encode()).decode()
-        return decrypted == password
+        # O hash no banco de dados já inclui o salt, então não precisamos gerar um novo
+        return bcrypt.checkpw(password.encode(), hashed_password.encode())
     except Exception as e:
         logger.error(f"Erro ao verificar senha: {e}")
+        logger.error(f"Hash da senha: {hashed_password}")
+        logger.error(f"Senha fornecida: {password}")
         return False
 
 # Dicionário para armazenar usuários online

@@ -39,4 +39,8 @@ CREATE TABLE IF NOT EXISTS online_users (
 
 -- Índices para melhor performance
 CREATE INDEX idx_chat_messages_room ON chat_messages(room_id);
-CREATE INDEX idx_online_users_room ON online_users(room_id); 
+CREATE INDEX idx_online_users_room ON online_users(room_id);
+
+-- Inserir usuário padrão (apenas se não existir)
+INSERT IGNORE INTO users (username, email, password) 
+VALUES ('jmigliatti', 'joao.paulo.migliatti@gmail.com', '$2a$10$N9qo8uLOickgx2ZMRZoMyeIjZAgcfl7p92ldGxad68LJZdL17lhWy'); 

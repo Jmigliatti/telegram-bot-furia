@@ -259,42 +259,9 @@
         </div>
 
         <div class="register-link">
-            Não tem uma conta? <a href="register.html">Cadastre-se</a>
+            <p>Não tem uma conta? <a href="/register.html">Cadastre-se</a></p>
         </div>
     </div>
-
-    <script src="auth.js"></script>
-    <script>
-        document.getElementById('login-form').addEventListener('submit', function(e) {
-            e.preventDefault();
-            
-            const email = document.getElementById('email').value;
-            const password = document.getElementById('password').value;
-            
-            // Enviar dados para o servidor
-            fetch('/api/login', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({
-                    email: email,
-                    password: password
-                })
-            })
-            .then(response => response.json())
-            .then(data => {
-                if (data.error) {
-                    alert(data.error);
-                } else {
-                    window.location.href = 'chat.html';
-                }
-            })
-            .catch(error => {
-                console.error('Erro:', error);
-                alert('Erro ao fazer login. Tente novamente.');
-            });
-        });
-    </script>
+    <script src="/auth.js"></script>
 </body>
 </html>

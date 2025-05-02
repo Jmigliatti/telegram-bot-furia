@@ -63,15 +63,17 @@
             position: relative;
             z-index: 2;
             border: 1px solid var(--accent-color);
+            height: calc(100vh - 40px);
         }
 
         .sidebar {
             width: 250px;
             background-color: var(--card-background);
             border-right: 1px solid var(--accent-color);
-            padding: 20px;
+            padding: 15px;
             display: flex;
             flex-direction: column;
+            overflow-y: auto;
         }
 
         .user-info {
@@ -151,13 +153,14 @@
             justify-content: center;
             background-color: #25D366;
             color: white;
-            padding: 12px 20px;
+            padding: 8px 12px;
             border-radius: 8px;
             text-decoration: none;
             font-family: 'Montserrat', sans-serif;
             font-weight: 600;
-            margin-top: 20px;
+            margin-top: 0;
             transition: all 0.3s ease;
+            font-size: 0.9rem;
         }
 
         .whatsapp-button:hover {
@@ -167,38 +170,42 @@
 
         .whatsapp-button i {
             margin-right: 8px;
-            font-size: 1.2rem;
+            font-size: 1.1rem;
         }
 
-        .feed-button {
+        .feed-button, .calendar-button {
             display: flex;
             align-items: center;
             justify-content: center;
             background-color: var(--primary-color);
             color: var(--background-color);
-            padding: 12px 20px;
+            padding: 8px 12px;
             border-radius: 8px;
             text-decoration: none;
             font-family: 'Montserrat', sans-serif;
             font-weight: 600;
-            margin-top: 20px;
+            margin-top: 0;
             transition: all 0.3s ease;
+            font-size: 0.9rem;
+            border: none;
+            cursor: pointer;
         }
 
-        .feed-button:hover {
+        .feed-button:hover, .calendar-button:hover {
             background-color: var(--text-secondary);
             transform: translateY(-2px);
         }
 
-        .feed-button i {
+        .feed-button i, .calendar-button i {
             margin-right: 8px;
-            font-size: 1.2rem;
+            font-size: 1.1rem;
         }
 
         .button-container {
             display: flex;
             flex-direction: column;
-            gap: 10px;
+            gap: 8px;
+            margin-top: 10px;
         }
 
         .user-list {
@@ -230,12 +237,16 @@
             flex: 1;
             display: flex;
             flex-direction: column;
+            height: 100%;
+            position: relative;
         }
 
         .chat-messages {
             flex: 1;
-            padding: 20px;
+            padding: 15px;
             overflow-y: auto;
+            height: calc(100% - 70px);
+            margin-bottom: 70px;
         }
 
         .message {
@@ -363,129 +374,104 @@
             font-size: 1.2rem;
         }
 
-        .calendar-button {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            background-color: var(--primary-color);
-            color: var(--background-color);
-            padding: 12px 20px;
-            border-radius: 8px;
-            text-decoration: none;
-            font-family: 'Montserrat', sans-serif;
-            font-weight: 600;
-            margin-top: 20px;
-            transition: all 0.3s ease;
-            border: none;
-            cursor: pointer;
-        }
-
-        .calendar-button:hover {
-            background-color: var(--text-secondary);
-            transform: translateY(-2px);
-        }
-
-        .calendar-button i {
-            margin-right: 8px;
-            font-size: 1.2rem;
+        .message-input-container {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            padding: 10px;
+            background: var(--secondary-color);
+            border-top: 1px solid var(--accent-color);
+            z-index: 3;
         }
 
         @media (max-width: 768px) {
             .chat-container {
-                flex-direction: column;
                 margin: 0;
-                border-radius: 0;
                 height: 100vh;
+                border-radius: 0;
+                flex-direction: column;
             }
 
             .sidebar {
                 width: 100%;
+                height: auto;
+                max-height: 120px;
                 border-right: none;
                 border-bottom: 1px solid var(--accent-color);
-                padding: 15px;
+                padding: 8px;
             }
 
             .user-info {
-                padding-bottom: 15px;
-                margin-bottom: 15px;
+                padding-bottom: 8px;
+                margin-bottom: 8px;
             }
 
             .button-container {
                 flex-direction: row;
-                gap: 10px;
-                margin-top: 15px;
+                gap: 6px;
+                margin-top: 6px;
             }
 
-            .whatsapp-button,
-            .news-button,
-            .calendar-button {
-                margin-top: 0;
-                padding: 10px 15px;
+            .whatsapp-button, .feed-button, .calendar-button {
+                padding: 5px 8px;
+                font-size: 0.75rem;
+            }
+
+            .whatsapp-button i, .feed-button i, .calendar-button i {
                 font-size: 0.9rem;
-            }
-
-            .online-users {
-                margin-top: 15px;
-            }
-
-            .chat-main {
-                height: calc(100vh - 250px);
+                margin-right: 4px;
             }
 
             .chat-messages {
-                padding: 15px;
-                height: calc(100% - 80px);
-                overflow-y: auto;
-            }
-
-            .message {
-                max-width: 85%;
-            }
-
-            .message-content {
-                padding: 8px 12px;
-                font-size: 0.9rem;
-            }
-
-            .chat-input {
-                padding: 15px;
-            }
-
-            .message-input {
+                height: calc(100% - 60px);
                 padding: 10px;
-                font-size: 0.9rem;
+                margin-bottom: 60px;
             }
 
-            .send-button {
-                padding: 10px 15px;
-                font-size: 0.9rem;
-            }
-
-            .logout-button {
-                top: 10px;
-                right: 10px;
-                padding: 6px 12px;
-                font-size: 0.9rem;
+            .message-input-container {
+                padding: 8px;
             }
         }
 
         @media (max-width: 480px) {
+            .sidebar {
+                max-height: 100px;
+                padding: 6px;
+            }
+
+            .user-info {
+                padding-bottom: 6px;
+                margin-bottom: 6px;
+            }
+
+            .user-info img {
+                width: 20px;
+                height: 20px;
+            }
+
             .button-container {
-                flex-direction: column;
+                gap: 4px;
             }
 
-            .whatsapp-button,
-            .news-button,
-            .calendar-button {
-                width: 100%;
+            .whatsapp-button, .feed-button, .calendar-button {
+                padding: 4px 6px;
+                font-size: 0.7rem;
             }
 
-            .message {
-                max-width: 95%;
-            }
-
-            .message-info {
+            .whatsapp-button i, .feed-button i, .calendar-button i {
                 font-size: 0.8rem;
+                margin-right: 3px;
+            }
+
+            .chat-messages {
+                height: calc(100% - 50px);
+                padding: 8px;
+                margin-bottom: 50px;
+            }
+
+            .message-input-container {
+                padding: 6px;
             }
         }
     </style>
@@ -531,7 +517,7 @@
                 <!-- Mensagens serão adicionadas aqui via JavaScript -->
             </div>
 
-            <div class="chat-input">
+            <div class="message-input-container">
                 <form id="message-form" class="message-form">
                     <input type="text" id="message-input" class="message-input" placeholder="Digite sua mensagem..." required>
                     <button type="submit" class="send-button">

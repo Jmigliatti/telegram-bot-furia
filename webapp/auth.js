@@ -81,4 +81,45 @@ function logout() {
     localStorage.removeItem('authToken');
     localStorage.removeItem('userData');
     window.location.href = '/index.html';
-} 
+}
+
+// Função para fazer login com email e senha
+async function loginWithEmailAndPassword(email, password) {
+    try {
+        const response = await fetch('/api/login', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ email, password })
+        });
+
+        const data = await response.json();
+
+        if (response.ok) {
+            // Armazenar dados do usuário
+            localStorage.setItem('userData', JSON.stringify(data.user));
+            
+            // Redirecionar para a página de chat
+            window.location.href = '/chat.html';
+        } else {
+            throw new Error(data.error || 'Erro ao fazer login');
+        }
+    } catch (error) {
+        console.error('Erro no login:', error);
+        alert(error.message || 'Erro ao fazer login. Por favor, tente novamente.');
+    }
+}
+
+// Adicionar event listener para o formulário de login
+document.addEventListener('DOMContentLoaded', () => {
+    const loginForm = document.getElementById('login-form');
+    if (loginForm) {
+        loginForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+            await loginWithEmailAndPassword(email, password);
+        });
+    }
+}); 
