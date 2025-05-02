@@ -363,21 +363,129 @@
             font-size: 1.2rem;
         }
 
+        .calendar-button {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-color: var(--primary-color);
+            color: var(--background-color);
+            padding: 12px 20px;
+            border-radius: 8px;
+            text-decoration: none;
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 600;
+            margin-top: 20px;
+            transition: all 0.3s ease;
+            border: none;
+            cursor: pointer;
+        }
+
+        .calendar-button:hover {
+            background-color: var(--text-secondary);
+            transform: translateY(-2px);
+        }
+
+        .calendar-button i {
+            margin-right: 8px;
+            font-size: 1.2rem;
+        }
+
         @media (max-width: 768px) {
             .chat-container {
                 flex-direction: column;
                 margin: 0;
                 border-radius: 0;
+                height: 100vh;
             }
 
             .sidebar {
                 width: 100%;
                 border-right: none;
                 border-bottom: 1px solid var(--accent-color);
+                padding: 15px;
+            }
+
+            .user-info {
+                padding-bottom: 15px;
+                margin-bottom: 15px;
+            }
+
+            .button-container {
+                flex-direction: row;
+                gap: 10px;
+                margin-top: 15px;
+            }
+
+            .whatsapp-button,
+            .news-button,
+            .calendar-button {
+                margin-top: 0;
+                padding: 10px 15px;
+                font-size: 0.9rem;
+            }
+
+            .online-users {
+                margin-top: 15px;
+            }
+
+            .chat-main {
+                height: calc(100vh - 250px);
+            }
+
+            .chat-messages {
+                padding: 15px;
+                height: calc(100% - 80px);
+                overflow-y: auto;
             }
 
             .message {
                 max-width: 85%;
+            }
+
+            .message-content {
+                padding: 8px 12px;
+                font-size: 0.9rem;
+            }
+
+            .chat-input {
+                padding: 15px;
+            }
+
+            .message-input {
+                padding: 10px;
+                font-size: 0.9rem;
+            }
+
+            .send-button {
+                padding: 10px 15px;
+                font-size: 0.9rem;
+            }
+
+            .logout-button {
+                top: 10px;
+                right: 10px;
+                padding: 6px 12px;
+                font-size: 0.9rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .button-container {
+                flex-direction: column;
+            }
+
+            .whatsapp-button,
+            .news-button,
+            .calendar-button {
+                width: 100%;
+            }
+
+            .message {
+                max-width: 95%;
+            }
+
+            .message-info {
+                font-size: 0.8rem;
             }
         }
     </style>
@@ -402,6 +510,11 @@
                 <button class="news-button" onclick="window.location.href='feed.html'">
                     <i class="fas fa-newspaper"></i>
                     Notícias
+                </button>
+
+                <button class="calendar-button" onclick="window.location.href='calendario.html'">
+                    <i class="fas fa-calendar-alt"></i>
+                    Calendário
                 </button>
             </div>
 

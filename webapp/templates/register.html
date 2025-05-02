@@ -66,6 +66,7 @@
             z-index: 2;
             border: 1px solid var(--accent-color);
             margin: 30px;
+            min-height: 500px;
         }
 
         .logo-container {
@@ -120,13 +121,13 @@
 
         .form-row {
             display: flex;
-            flex-direction: column;
+            flex-direction: row;
             gap: 15px;
             margin-bottom: 20px;
         }
 
         .form-row .form-group {
-            width: 100%;
+            width: 50%;
             margin-bottom: 0;
         }
 
@@ -176,25 +177,148 @@
             display: none;
         }
 
-        @media (max-width: 480px) {
+        @media (max-width: 768px) {
+            body {
+                padding: 10px;
+            }
+
             .register-container {
-                padding: 20px;
-                margin: 10px;
+                padding: 30px;
+                margin: 20px;
+                width: 100%;
+                max-width: 100%;
+                min-height: 1200px;
+            }
+
+            .logo-container {
+                margin-bottom: 20px;
+            }
+
+            .logo-container img {
+                max-width: 80px;
+            }
+
+            .logo-container h1 {
+                font-size: 1.1rem;
             }
 
             .form-row {
                 flex-direction: column;
-                gap: 0;
+                gap: 15px;
+                margin-bottom: 15px;
             }
 
-            .logo-container h1 {
-                font-size: 1.5rem;
+            .form-row .form-group {
+                width: 100%;
+                margin-bottom: 0;
+            }
+
+            form {
+                display: flex;
+                flex-direction: column;
+            }
+
+            .form-row:first-child {
+                margin-bottom: 0;
+            }
+
+            .form-group {
+                margin-bottom: 15px;
+            }
+
+            .form-group label {
+                font-size: 0.9rem;
+                margin-bottom: 6px;
+            }
+
+            .form-group input {
+                padding: 12px;
+                font-size: 0.9rem;
+            }
+
+            .btn {
+                width: 100%;
+                padding: 8px 12px;
+                font-size: 0.9rem;
+                margin-top: 10px;
+                height: 40px;
+            }
+
+            .login-link {
+                margin-top: 15px;
+                font-size: 0.9rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            body {
+                padding: 5px;
+            }
+
+            .register-container {
+                padding: 50px;
+                margin: 15px;
+                min-height: 1200px;
+            }
+
+            .logo-container {
+                margin-bottom: 15px;
             }
 
             .logo-container img {
-                max-width: 100px;
+                max-width: 70px;
+            }
+
+            .logo-container h1 {
+                font-size: 1rem;
+            }
+
+            .form-row {
+                flex-direction: column;
+                gap: 12px;
+                margin-bottom: 12px;
+            }
+
+            .form-row .form-group {
+                width: 100%;
+                margin-bottom: 0;
+            }
+
+            form {
+                display: flex;
+                flex-direction: column;
+            }
+
+            .form-row:first-child {
+                margin-bottom: 0;
+            }
+
+            .form-group {
+                margin-bottom: 12px;
+            }
+
+            .form-group label {
+                font-size: 0.85rem;
+                margin-bottom: 4px;
+            }
+
+            .form-group input {
+                padding: 10px;
+                font-size: 0.85rem;
+            }
+
+            .btn {
+                padding: 6px 10px;
+                font-size: 0.85rem;
+                height: 36px;
+            }
+
+            .login-link {
+                margin-top: 12px;
+                font-size: 0.85rem;
             }
         }
+
     </style>
 </head>
 <body>
@@ -204,29 +328,25 @@
             <h1>Cadastro</h1>
         </div>
         <form id="registerForm">
-            <div class="form-row">
-                <div class="form-group">
-                    <label for="username">Nome de Usuário</label>
-                    <input type="text" id="username" name="username" required placeholder="Digite seu nome de usuário">
-                    <div class="error-message" id="usernameError"></div>
-                </div>
-                <div class="form-group">
-                    <label for="email">E-mail</label>
-                    <input type="email" id="email" name="email" required placeholder="Digite seu e-mail">
-                    <div class="error-message" id="emailError"></div>
-                </div>
+            <div class="form-group">
+                <label for="username">Nome de Usuário</label>
+                <input type="text" id="username" name="username" required placeholder="Digite seu nome de usuário">
+                <div class="error-message" id="usernameError"></div>
             </div>
-            <div class="form-row">
-                <div class="form-group">
-                    <label for="password">Senha</label>
-                    <input type="password" id="password" name="password" required placeholder="Digite sua senha">
-                    <div class="error-message" id="passwordError"></div>
-                </div>
-                <div class="form-group">
-                    <label for="confirmPassword">Confirmar Senha</label>
-                    <input type="password" id="confirmPassword" name="confirmPassword" required placeholder="Confirme sua senha">
-                    <div class="error-message" id="confirmPasswordError"></div>
-                </div>
+            <div class="form-group">
+                <label for="email">E-mail</label>
+                <input type="email" id="email" name="email" required placeholder="Digite seu e-mail">
+                <div class="error-message" id="emailError"></div>
+            </div>
+            <div class="form-group">
+                <label for="password">Senha</label>
+                <input type="password" id="password" name="password" required placeholder="Digite sua senha">
+                <div class="error-message" id="passwordError"></div>
+            </div>
+            <div class="form-group">
+                <label for="confirmPassword">Confirmar Senha</label>
+                <input type="password" id="confirmPassword" name="confirmPassword" required placeholder="Confirme sua senha">
+                <div class="error-message" id="confirmPasswordError"></div>
             </div>
             <button type="submit" class="btn">Cadastrar</button>
         </form>

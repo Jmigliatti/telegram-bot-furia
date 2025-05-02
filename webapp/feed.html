@@ -107,6 +107,11 @@
             object-fit: cover;
         }
 
+        video.post-image {
+            object-fit: cover;
+            cursor: pointer;
+        }
+
         .post-content {
             padding: 15px;
         }
@@ -320,6 +325,34 @@
         </div>
 
         <div class="feed-grid">
+            <!-- Novo post com vídeo -->
+            <div class="post-card" onclick="openModal(this)">
+                <video class="post-image" preload="metadata">
+                    <source src="/static/ssstwitter.com_1746187570404.mp4#t=0.1" type="video/mp4">
+                    Seu navegador não suporta o elemento de vídeo.
+                </video>
+                <div class="post-content">
+                    <h2 class="post-title">Quando a gente coloca esse X1 pra rolar???</h2>
+                    <p class="post-description">conexão #FURIACS e #FURIAFC na #KingsLeagueBrazil</p>
+                    <div class="post-meta">
+                        <div class="post-date">
+                            <i class="far fa-calendar"></i>
+                            <span>01/05/2024</span>
+                        </div>
+                        <div class="post-actions">
+                            <span class="post-action">
+                                <i class="far fa-heart"></i>
+                                <span>156</span>
+                            </span>
+                            <span class="post-action">
+                                <i class="far fa-comment"></i>
+                                <span>42</span>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
             <!-- Exemplo de post -->
             <div class="post-card" onclick="openModal(this)">
                 <img src="/static/Gp4xTHOXIAM7b9J.jpg" alt="Ол келді! Ele chegou!" class="post-image">
@@ -376,7 +409,7 @@
     <div id="postModal" class="modal">
         <div class="modal-content">
             <span class="close-modal" onclick="closeModal()">&times;</span>
-            <img id="modalImage" class="modal-image" src="" alt="">
+            <div class="modal-image"></div>
             <h2 id="modalTitle" class="modal-title"></h2>
             <p id="modalDescription" class="modal-description"></p>
             <div class="modal-meta">
@@ -399,18 +432,50 @@
     </div>
 
     <script>
+        // Função para configurar thumbnails dos vídeos
+        function setupVideoThumbnails() {
+            const videos = document.querySelectorAll('video.post-image');
+            videos.forEach(video => {
+                // Pausar o vídeo no primeiro frame
+                video.addEventListener('loadedmetadata', function() {
+                    this.currentTime = 0.1;
+                    this.pause();
+                });
+            });
+        }
+
+        // Chamar a função quando a página carregar
+        document.addEventListener('DOMContentLoaded', setupVideoThumbnails);
+
         // Função para abrir o modal
         function openModal(postCard) {
             const modal = document.getElementById('postModal');
-            const modalImage = document.getElementById('modalImage');
+            const modalImage = document.querySelector('.modal-image');
             const modalTitle = document.getElementById('modalTitle');
             const modalDescription = document.getElementById('modalDescription');
             const modalDate = document.getElementById('modalDate');
             const modalLikes = document.getElementById('modalLikes');
             const modalComments = document.getElementById('modalComments');
 
+            // Limpar conteúdo anterior
+            modalImage.innerHTML = '';
+
+            // Verificar se é vídeo ou imagem
+            const mediaElement = postCard.querySelector('.post-image');
+            if (mediaElement.tagName === 'VIDEO') {
+                const video = document.createElement('video');
+                video.controls = true;
+                video.className = 'modal-image';
+                const source = document.createElement('source');
+                source.src = mediaElement.querySelector('source').src;
+                source.type = 'video/mp4';
+                video.appendChild(source);
+                modalImage.appendChild(video);
+            } else {
+                modalImage.src = mediaElement.src;
+            }
+
             // Preencher o modal com os dados do post
-            modalImage.src = postCard.querySelector('.post-image').src;
             modalTitle.textContent = postCard.querySelector('.post-title').textContent;
             modalDescription.textContent = postCard.querySelector('.post-description').textContent;
             modalDate.textContent = postCard.querySelector('.post-date span').textContent;
