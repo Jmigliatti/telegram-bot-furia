@@ -135,7 +135,7 @@ def register_page():
 def chat_page():
     logger.debug("Acessando rota /chat.html")
     try:
-        return send_from_directory(".", "chat.html")
+        return send_from_directory(".", "templates/chat.html")
     except Exception as e:
         logger.error(f"Erro ao servir chat.html: {e}")
         return str(e), 500
