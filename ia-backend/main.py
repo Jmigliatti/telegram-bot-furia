@@ -40,7 +40,6 @@ def verificar_canal_ao_vivo(canal: str):
         return True  # Canal está ao vivo
     return False  # Canal não está ao vivo
 
-# CORS liberado
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],

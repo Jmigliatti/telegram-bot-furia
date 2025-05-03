@@ -16,7 +16,7 @@ logger = logging.getLogger(__name__)
 # Carregar variáveis de ambiente
 load_dotenv()
 
-app = Flask(__name__, static_folder=".", template_folder="templates")
+app = Flask(__name__, static_folder="static", template_folder="templates")
 app.config['SECRET_KEY'] = 'furia_chat_secret_key'
 socketio = SocketIO(app, cors_allowed_origins="*")
 
@@ -119,7 +119,7 @@ chat_messages = []
 
 @app.route('/')
 def index():
-    return redirect('/index.html')
+    return render_template('index.html')
 
 @app.route('/register')
 def register():
@@ -140,19 +140,52 @@ def calendario():
 def chat_page():
     logger.debug("Acessando rota /chat")
     try:
-        return send_from_directory(".", "templates/chat.html")
+        return render_template("chat.html")
     except Exception as e:
         logger.error(f"Erro ao servir chat.html: {e}")
         return str(e), 500
+    
+@app.route("/api/update-status", methods=["POST"])
+def update_status():
+    data = request.get_json()
+    user_email = data.get("email")
+    status = data.get("status")
 
-@app.route('/<path:path>')
-def static_files(path):
-    logger.debug(f"Acessando arquivo estático: {path}")
+    if not user_email or status not in ["online", "offline"]:
+        return jsonify({"error": "Dados inválidos"}), 400
+
     try:
-        return send_from_directory(".", path)
+        conn = get_db_connection()  # <-- Aqui
+        if not conn:
+            return jsonify({"error": "Erro ao conectar ao banco de dados"}), 500
+        cursor = conn.cursor()
+        cursor.execute(
+            "UPDATE users SET status = %s WHERE email = %s", (status, user_email)
+        )
+        conn.commit()
+        cursor.close()
+        conn.close()
+        return jsonify({"message": "Status atualizado com sucesso"})
     except Exception as e:
-        logger.error(f"Erro ao servir {path}: {str(e)}")
-        return str(e), 500
+        app.logger.error(f"Erro ao atualizar status: {e}")
+        return jsonify({"error": "Erro interno no servidor"}), 500
+
+    
+@app.route("/api/online-users", methods=["GET"])
+def get_online_users():
+    try:
+        conn = get_db_connection()
+        if not conn:
+            return jsonify({"error": "Erro ao conectar ao banco de dados"}), 500
+        cursor = conn.cursor(dictionary=True)
+        cursor.execute("SELECT username FROM users WHERE status = 'online'")
+        users = cursor.fetchall()
+        cursor.close()
+        conn.close()
+        return jsonify(users)
+    except Exception as e:
+        app.logger.error(f"Erro ao obter usuários online: {e}")
+        return jsonify({"error": "Erro ao obter usuários online"}), 500
 
 @app.route('/api/register', methods=['POST'])
 def register_api():
@@ -222,8 +255,12 @@ def login():
         try:
             cursor = connection.cursor(dictionary=True)
             
-            # Buscar usuário
-            cursor.execute("SELECT id, username, password FROM users WHERE email = %s", (email,))
+            # MODIFIQUE A QUERY PARA INCLUIR O NOME COMPLETO
+            cursor.execute("""
+                SELECT id, username, password, email 
+                FROM users 
+                WHERE email = %s
+            """, (email,))
             user = cursor.fetchone()
             
             if not user or not verify_password(user['password'], password):
@@ -241,11 +278,13 @@ def login():
             session['username'] = user['username']
             
             logger.debug(f"Usuário {user['username']} fez login com sucesso")
+            
             return jsonify({
                 'message': 'Login bem-sucedido',
                 'user': {
                     'id': user['id'],
-                    'username': user['username']
+                    'username': user['username'],
+                    'email': user['email']
                 }
             }), 200
             

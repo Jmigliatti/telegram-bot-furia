@@ -533,62 +533,75 @@
     <script>
         const socket = io();
         
-        // Função para carregar informações do usuário
+        // Modifique sua função loadUserInfo() para:
         function loadUserInfo() {
             const userData = JSON.parse(localStorage.getItem('userData'));
-            if (userData) {
-                document.getElementById('userName').textContent = userData.name;
+            const userNameElement = document.getElementById('userName');
+            
+            if (userData && userNameElement) {
+                userNameElement.textContent = userData.username || 'Usuário';
+            } else {
+                console.error('Dados do usuário ou elemento não encontrados');
             }
         }
 
-        // Função para atualizar lista de usuários online
-        function updateOnlineUsers() {
-            fetch('/api/online-users')
-                .then(response => response.json())
-                .then(users => {
-                    const onlineUsersList = document.getElementById('onlineUsersList');
-                    onlineUsersList.innerHTML = '';
-                    
-                    users.forEach(user => {
-                        const li = document.createElement('li');
-                        li.textContent = user.name;
-                        onlineUsersList.appendChild(li);
-                    });
-                })
-                .catch(error => console.error('Erro ao buscar usuários online:', error));
-        }
-
-        // Função para enviar status do usuário
-        function sendUserStatus() {
-            const userData = JSON.parse(localStorage.getItem('userData'));
-            if (userData) {
-                fetch('/api/update-status', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify({
-                        userId: userData.id,
-                        userName: userData.name
-                    })
-                }).catch(error => console.error('Erro ao atualizar status:', error));
-            }
-        }
-
-        document.addEventListener('DOMContentLoaded', () => {
-            loadUserInfo();
+        // Adicione este debug no seu Socket.IO:
+        socket.on('online_users', (users) => {
+            console.log('Usuários online recebidos:', users); // ← Debug
+            onlineUsers = users;
             updateOnlineUsers();
-            sendUserStatus();
-            
-            setInterval(updateOnlineUsers, 30000);
-            
-            setInterval(sendUserStatus, 60000);
         });
 
-        // Enviar status do usuário quando a página estiver visível
-        document.addEventListener('visibilitychange', () => {
-            if (document.visibilityState === 'visible') {
-                sendUserStatus();
+        // Variável global para armazenar usuários online
+        let onlineUsers = {};
+
+        // Função para atualizar lista de usuários online via Socket.IO
+        function updateOnlineUsers() {
+            const onlineUsersList = document.getElementById('onlineUsersList');
+            onlineUsersList.innerHTML = '';
+            
+            // Ordena os usuários alfabeticamente
+            const sortedUsers = Object.values(onlineUsers).sort((a, b) => 
+                a.username.localeCompare(b.username)
+            );
+            
+            sortedUsers.forEach(user => {
+                const li = document.createElement('li');
+                li.textContent = user.username;
+                onlineUsersList.appendChild(li);
+            });
+        }
+
+        // Eventos do Socket.IO para gerenciar usuários online
+        socket.on('user_connected', (user) => {
+            onlineUsers[user.id] = user;
+            updateOnlineUsers();
+        });
+
+        socket.on('user_disconnected', (userId) => {
+            delete onlineUsers[userId];
+            updateOnlineUsers();
+        });
+
+        socket.on('online_users', (users) => {
+            onlineUsers = users;
+            updateOnlineUsers();
+        });
+
+        // Modifique o evento de login para enviar informações do usuário
+        document.addEventListener('DOMContentLoaded', () => {
+            // Debug: verifica dados no localStorage
+            console.log('Dados do usuário no localStorage:', localStorage.getItem('userData'));
+            
+            loadUserInfo(); // Carrega o nome do usuário
+            
+            const userData = JSON.parse(localStorage.getItem('userData'));
+            if (userData) {
+                // Envia dados CORRETOS para o Socket.IO
+                socket.emit('login', {
+                    id: userData.id,
+                    username: userData.username
+                });
             }
         });
 
@@ -652,6 +665,41 @@
             messagesDiv.scrollTop = messagesDiv.scrollHeight;
         });
     </script>
+    <script>
+        const form = document.getElementById("chat-form");
+        const input = document.getElementById("user-input");
+        const messages = document.getElementById("chat-messages");
+      
+        form.addEventListener("submit", async function (e) {
+          e.preventDefault();
+          const userMessage = input.value;
+          if (!userMessage.trim()) return;
+      
+          // Adiciona mensagem do usuário
+          messages.innerHTML += `<div><strong>Você:</strong> ${userMessage}</div>`;
+          input.value = "";
+      
+          try {
+            const response = await fetch("http://localhost:8000/perguntar", {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json"
+              },
+              body: JSON.stringify({ pergunta: userMessage })
+            });
+      
+            const data = await response.json();
+            const respostaIA = data.resposta || "[Erro: Sem resposta]";
+            messages.innerHTML += `<div><strong>IA:</strong> ${respostaIA}</div>`;
+          } catch (error) {
+            messages.innerHTML += `<div><strong>IA:</strong> Erro ao conectar.</div>`;
+          }
+      
+          // Scroll para o fim
+          messages.scrollTop = messages.scrollHeight;
+        });
+      </script>
+      
 
 </body>
 </html> 

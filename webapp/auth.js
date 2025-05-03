@@ -45,11 +45,16 @@ async function handleAuthCallback(provider, code) {
 
         if (response.ok) {
             const data = await response.json();
-            // Armazenar o token de acesso
+            // ARMAZENAMENTO COMPLETO DOS DADOS (modificação importante)
             localStorage.setItem('authToken', data.access_token);
-            localStorage.setItem('userData', JSON.stringify(data.user));
+            localStorage.setItem('userData', JSON.stringify({
+                id: data.user.id,
+                name: data.user.username,
+                username: data.user.username,
+                email: data.user.email,
+                provider: provider
+            }));
             
-            // Redirecionar para a página principal
             window.location.href = '/feed';
         } else {
             throw new Error('Falha na autenticação');
@@ -97,8 +102,13 @@ async function loginWithEmailAndPassword(email, password) {
         const data = await response.json();
 
         if (response.ok) {
-            // Armazenar dados do usuário
-            localStorage.setItem('userData', JSON.stringify(data.user));
+            // ARMAZENE TODOS OS DADOS NECESSÁRIOS (modificação importante)
+            localStorage.setItem('userData', JSON.stringify({
+                id: data.user.id,
+                name: data.user.username,
+                username: data.user.username,
+                email: data.user.email
+            }));
             
             // Redirecionar para a página de chat
             window.location.href = '/chat';

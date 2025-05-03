@@ -8,7 +8,8 @@ CREATE TABLE IF NOT EXISTS users (
     password VARCHAR(255) NOT NULL,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     last_login TIMESTAMP NULL,
-    is_active BOOLEAN DEFAULT TRUE
+    is_active BOOLEAN DEFAULT TRUE,
+    status ENUM('online', 'offline') DEFAULT 'offline'
 );
 
 CREATE TABLE IF NOT EXISTS chat_messages (
