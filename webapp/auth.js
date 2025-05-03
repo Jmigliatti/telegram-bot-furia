@@ -50,7 +50,7 @@ async function handleAuthCallback(provider, code) {
             localStorage.setItem('userData', JSON.stringify(data.user));
             
             // Redirecionar para a página principal
-            window.location.href = '/feed.html';
+            window.location.href = '/feed';
         } else {
             throw new Error('Falha na autenticação');
         }
@@ -101,7 +101,7 @@ async function loginWithEmailAndPassword(email, password) {
             localStorage.setItem('userData', JSON.stringify(data.user));
             
             // Redirecionar para a página de chat
-            window.location.href = '/chat.html';
+            window.location.href = '/chat';
         } else {
             throw new Error(data.error || 'Erro ao fazer login');
         }

@@ -126,14 +126,19 @@ def register():
     logger.debug("Acessando rota /register")
     return render_template('register.html')
 
-@app.route('/register.html')
-def register_page():
-    logger.debug("Acessando rota /register.html")
-    return render_template('register.html')
+@app.route('/feed')
+def feed():
+    logger.debug("Acessando rota /feed")
+    return render_template('feed.html')
 
-@app.route('/chat.html')
+@app.route('/calendario')
+def calendario():
+    logger.debug("Acessando rota /calendario")
+    return render_template('calendario.html')
+
+@app.route('/chat')
 def chat_page():
-    logger.debug("Acessando rota /chat.html")
+    logger.debug("Acessando rota /chat")
     try:
         return send_from_directory(".", "templates/chat.html")
     except Exception as e:

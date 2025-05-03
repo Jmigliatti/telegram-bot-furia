@@ -223,7 +223,7 @@
                 const data = await response.json();
                 
                 if (response.ok) {
-                    window.location.href = '/chat.html';
+                    window.location.href = '/chat';
                 } else {
                     // Show error message
                     const errorField = document.getElementById(data.field + 'Error');
