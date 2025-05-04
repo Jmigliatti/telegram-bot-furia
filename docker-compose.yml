@@ -49,14 +49,5 @@ services:
       timeout: 5s
       retries: 5
 
-  ia-backend:
-    build: ./ia-backend
-    container_name: ia-backend
-    ports:
-      - "8000:8000"
-    restart: always
-    depends_on:
-      - webapp  # Se tiver dependências com outro serviço
-
 volumes:
   mysql_data:
