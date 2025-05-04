@@ -106,6 +106,25 @@
             padding: 0;
         }
 
+        .watch-button {
+            background-color: #9146FF;
+            color: white;
+            padding: 6px 12px;
+            border: none;
+            border-radius: 6px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .watch-button:hover {
+            background-color: #772ce8;
+        }
+
+
         .match-item {
             padding: 20px;
             border-bottom: 1px solid var(--accent-color);
@@ -280,7 +299,10 @@
                             <i class="fas fa-trophy"></i>
                             <span>ESL Pro League Season 19</span>
                         </div>
-                        <span class="status upcoming">Próximo</span>
+                        <div style="display: flex; align-items: center; gap: 10px;">
+                            <span class="status live">Ao Vivo</span>
+                            <a href="https://www.twitch.tv/eslcs" target="_blank" class="watch-button">Assistir</a>
+                        </div>
                     </div>
                 </li>
 
